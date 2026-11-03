@@ -93,14 +93,5 @@ CampusCanteen/
 - `PrintOrderActionPerformed` builds the order report line by line in the text area, reusing a shared `calculateTotal()` helper so prices are defined in one place.
 - `ExitActionPerformed` ends the program with `System.exit(0)`.
 
-## Roadmap
 
-- [ ] Implement **Save Order** (write the order to a file)
-- [ ] Store prices in a `Map` or enum instead of `switch` statements
-- [ ] Support multiple items per order
-- [ ] Add screenshots to this README
-
-## Author
-
-HOPE
 
