@@ -9,7 +9,29 @@ package CampusCanteen;
  * @author HOPEWELL
  */
 public class CanteenGUI extends javax.swing.JFrame {
-    
+     private double calculateTotal() {
+    double total = 0;
+
+    String menuItem = SelectionList.getSelectedValue();
+    if (menuItem != null) {
+        switch (menuItem) {
+            case "Chicken Salad":  total += 20; break;
+            case "Club Sandwich":  total += 17; break;
+            case "Burger":         total += 28; break;
+            case "Vegetable Wrap": total += 12; break;
+            case "Pie":            total += 15; break;
+        }
+    }
+
+    if (Milkshake.isSelected())       total += 17;
+    else if (FreshJuice.isSelected()) total += 7;
+    else if (CoolDrink.isSelected())  total += 12;
+    else if (Tea.isSelected())        total += 10;
+    else if (Coffee.isSelected())     total += 10;
+
+    return total;
+}
+     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CanteenGUI.class.getName());
 
     /**
@@ -17,6 +39,7 @@ public class CanteenGUI extends javax.swing.JFrame {
      */
     public CanteenGUI() {
         initComponents();
+         PlaceOrder.addActionListener(this::PlaceOrderActionPerformed);
     }
 
     /**
@@ -36,7 +59,7 @@ public class CanteenGUI extends javax.swing.JFrame {
         txtRequest = new javax.swing.JTextField();
         WaterCheckBox = new javax.swing.JCheckBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtArea = new javax.swing.JTextArea();
         Tea = new javax.swing.JRadioButton();
         FreshJuice = new javax.swing.JRadioButton();
         CoolDrink = new javax.swing.JRadioButton();
@@ -70,9 +93,9 @@ public class CanteenGUI extends javax.swing.JFrame {
         WaterCheckBox.setText("Water");
         WaterCheckBox.addActionListener(this::WaterCheckBoxActionPerformed);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtArea.setColumns(20);
+        txtArea.setRows(5);
+        jScrollPane2.setViewportView(txtArea);
 
         btnGroup.add(Tea);
         Tea.setText("Tea");
@@ -97,22 +120,27 @@ public class CanteenGUI extends javax.swing.JFrame {
         FileMenu.setText("File");
 
         PlaceOrder.setText("Place Order");
+        PlaceOrder.addActionListener(this::PlaceOrderActionPerformed);
         FileMenu.add(PlaceOrder);
 
         SaveOrder.setText("Save Order");
         FileMenu.add(SaveOrder);
 
         Exit.setText("Exit");
+        Exit.addActionListener(this::ExitActionPerformed);
         FileMenu.add(Exit);
 
         jMenuBar1.add(FileMenu);
 
         PrintOrderMenu.setText("Print Order");
+        PrintOrderMenu.addActionListener(this::PrintOrderMenuActionPerformed);
 
         AmountDue.setText("Amount Due");
+        AmountDue.addActionListener(this::AmountDueActionPerformed);
         PrintOrderMenu.add(AmountDue);
 
-        PrintOrder.setText("PRint Order");
+        PrintOrder.setText("Print Order");
+        PrintOrder.addActionListener(this::PrintOrderActionPerformed);
         PrintOrderMenu.add(PrintOrder);
 
         jMenuBar1.add(PrintOrderMenu);
@@ -195,6 +223,150 @@ public class CanteenGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TeaActionPerformed
 
+    private void PlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlaceOrderActionPerformed
+        // TODO add your handling code here:
+    String menuItem = SelectionList.getSelectedValue();   // null if nothing selected
+
+    String drink = null;
+    if (Tea.isSelected())            drink = Tea.getText();
+    else if (FreshJuice.isSelected()) drink = FreshJuice.getText();
+    else if (CoolDrink.isSelected())  drink = CoolDrink.getText();
+    else if (Milkshake.isSelected())  drink = Milkshake.getText();
+    else if (Coffee.isSelected())     drink = Coffee.getText();
+
+    String water = WaterCheckBox.isSelected() ? "Water" : "No Water";
+
+    String request = txtRequest.getText().trim();
+    if (request.isEmpty()) {
+        request = "No special requests";
+    }
+
+    // Make sure a food item and a drink were chosen
+    if (menuItem == null || drink == null) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a menu item and a drink.",
+                "Incomplete Order",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Display the order
+    String message = menuItem + "\n" + drink + "\n" + water + "\n" + request;
+
+    javax.swing.JOptionPane.showMessageDialog(this,
+            message,
+            "Current Order",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+    }//GEN-LAST:event_PlaceOrderActionPerformed
+
+    private void AmountDueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AmountDueActionPerformed
+        // TODO add your handling code here:
+double total = 0;
+
+String menuItem = SelectionList.getSelectedValue();
+if (menuItem == null) {
+      javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a menu item and a drink.",
+                "Incomplete Order",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+}
+
+switch (menuItem) {
+    case "Chicken Salad" -> total += 20;
+    case "Club Sandwich" -> total += 17;
+    case "Burger" -> total += 28;
+    case "Vegetable Wrap" -> total += 12;
+    case "Pie" -> total += 15;            
+}
+
+ if (Milkshake.isSelected()) {
+     total += 17;
+ }else if (FreshJuice.isSelected()) {
+        total += 7;
+    }else if (CoolDrink.isSelected()) {
+        total += 12;
+    }else if (Tea.isSelected()) {
+        total += 10;
+    }else if (Coffee.isSelected()) {
+        total += 10;
+    }else {
+          javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a drink first.",
+                "Incomplete Order",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+  javax.swing.JOptionPane.showMessageDialog(this,
+            "The total amount due is: R " + total,
+            "Amount Due",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+ 
+ 
+    }//GEN-LAST:event_AmountDueActionPerformed
+
+    private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
+        // TODO add your handling code here:
+
+    int choice = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to exit?",
+            "Exit",
+            javax.swing.JOptionPane.YES_NO_OPTION);
+
+    if (choice == javax.swing.JOptionPane.YES_OPTION) {
+        System.exit(0);
+    }
+
+        
+    }//GEN-LAST:event_ExitActionPerformed
+
+    private void PrintOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintOrderActionPerformed
+        // TODO add your handling code here:
+        
+    String menuItem = SelectionList.getSelectedValue();
+
+    String drink = null;
+    if (Tea.isSelected())             drink = Tea.getText();
+    else if (FreshJuice.isSelected()) drink = "Fresh Fruit Juice";
+    else if (CoolDrink.isSelected())  drink = CoolDrink.getText();
+    else if (Milkshake.isSelected())  drink = Milkshake.getText();
+    else if (Coffee.isSelected())     drink = Coffee.getText();
+
+    // Validate
+    if (menuItem == null || drink == null) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a menu item and a drink.",
+                "Incomplete Order",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String request = txtRequest.getText().trim();
+    if (request.isEmpty()) {
+        request = "None";
+    }
+
+    // Build the report
+    txtArea.setText("");   // clear any previous report
+    txtArea.append("Menu Choice: " + menuItem + "\n");
+    txtArea.append("Special Request: " + request + "\n");
+    txtArea.append("Drink: " + drink + "\n");
+
+    if (WaterCheckBox.isSelected()) {
+        txtArea.append("Water\n");
+    }
+
+    txtArea.append("\nAmount Due: R " + calculateTotal() + "\n");
+
+    }//GEN-LAST:event_PrintOrderActionPerformed
+
+    private void PrintOrderMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintOrderMenuActionPerformed
+        // TODO add your handling code here:
+       
+
+    }//GEN-LAST:event_PrintOrderMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -241,8 +413,8 @@ public class CanteenGUI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelRequest;
+    private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtRequest;
     // End of variables declaration//GEN-END:variables
 }
