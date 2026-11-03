@@ -102,8 +102,5 @@ CampusCanteen/
 
 ## Author
 
-HOPEWELL
+HOPE
 
-## License
-
-Add a license of your choice (for example, MIT) before publishing. See [choosealicense.com](https://choosealicense.com/).
